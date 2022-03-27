@@ -1,4 +1,5 @@
-﻿using Code.UI;
+﻿using Code.GamePlay;
+using Code.UI;
 using CommonBaseUI.Data;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -9,6 +10,7 @@ namespace Code
 {
     public class GameLifeTimeScope : LifetimeScope
     {
+        [SerializeField] private DogView dogView;
         [Header("Data Base")]
         [SerializeField] private GameConfig gameConfig;
         [Header("Audio")]
@@ -20,9 +22,12 @@ namespace Code
         [SerializeField] private Window[] windows;
         protected override void Configure(IContainerBuilder builder)
         {
+            builder.RegisterEntryPoint<DogMoveSystem>();
+            builder.RegisterEntryPoint<PlatformController>();
             builder.Register<IPlayerInput, PlayerInput>(Lifetime.Singleton);
             builder.Register<IMediator, MediatorUI>(Lifetime.Singleton);
 
+            RegisterComponents(builder);
             RegisterDataBase(builder);
             RegisterUI(builder);
             RegisterAudio(builder);
@@ -66,6 +71,11 @@ namespace Code
             {
                 builder.RegisterComponent(window);
             }
+        }
+
+        private void RegisterComponents(IContainerBuilder builder)
+        {
+            builder.RegisterComponent(dogView);
         }
     }
 }

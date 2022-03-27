@@ -18,6 +18,10 @@ namespace CommonBaseUI.Data
     [Serializable]
     public class CommonData : ISerializable
     {
+        public float dogSpeed = 2f;
+        [Header("Rhythm settings")]
+        public float[] chordSteps;
+        public float pauseNightDay;
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             
