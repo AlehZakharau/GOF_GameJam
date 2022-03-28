@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;
 using VContainer.Unity;
 
@@ -11,13 +10,11 @@ namespace Code.GamePlay
         private readonly IPlayerInput playerInput;
 
         private bool jumping;
-        private float jumpingCup = 0.3f;
-        private float jumpingTimer = 0f;
-        private float jumpingCof = 1f;
+        private float jumpingTimer;
+        
         private int jumpCount;
         private const int JumpMax = 1;
-
-        private Vector3 force;
+        
         private float gravityScaler;
         
 
@@ -26,8 +23,8 @@ namespace Code.GamePlay
             this.dogView = dogView;
             this.playerInput = playerInput;
             
-            playerInput.Actions.Player.Jump.started += JumpOnstarted;
-            playerInput.Actions.Player.Jump.canceled += JumpOnstarted;
+            playerInput.Actions.Player.Jump.started += Jump;
+            playerInput.Actions.Player.Jump.canceled += Jump;
         }
 
         public void Tick()
@@ -47,7 +44,7 @@ namespace Code.GamePlay
 
         private void CalculateJumpHigh()
         {
-            if (jumpingTimer > jumpingCup)
+            if (jumpingTimer > dogView.jumpingCup)
             {
                 jumping = false;
                 jumpingTimer = 0;
@@ -59,7 +56,7 @@ namespace Code.GamePlay
             }
         }
 
-        private void JumpOnstarted(InputAction.CallbackContext obj)
+        private void Jump(InputAction.CallbackContext obj)
         {
             if (obj.started)
             {
@@ -69,7 +66,6 @@ namespace Code.GamePlay
             {
                 jumping = false;
                 jumpingTimer = 0;
-                jumpingCof = 1f;
             }
         }
 
@@ -91,19 +87,13 @@ namespace Code.GamePlay
             }
         }
 
-        private void JumpPushing()
-        {
-            
-        }
-
-
         private void MoveDog(Vector2 input)
         {
             if(input == Vector2.zero) return;
 
             var addSpeed = 1f;
             if (!IsGrounded(dogView.groundChecker[1]))
-                addSpeed *= 1.5f; 
+                addSpeed *= dogView.airSpeed; 
             var newPosition = new Vector3(input.y, 0, input.x);
             dogView.transform.position += newPosition * dogView.dogSpeed * addSpeed * Time.deltaTime;
         }
@@ -112,13 +102,6 @@ namespace Code.GamePlay
         private bool IsGrounded(Transform checker)
         {
             return Physics.CheckSphere(checker.position, dogView.groundCheckerRadius, dogView.groundLayer);
-        }
-
-        private Vector3 FindSurface()
-        {
-            var a = Array.Empty<Collider>();
-            var size = Physics.OverlapSphereNonAlloc(dogView.groundChecker[0].position, dogView.groundCheckerRadius, a, dogView.groundLayer);
-            return a.Length > 0 ? a[0].transform.position : Vector3.zero;
         }
     }
 }
