@@ -1,22 +1,33 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using VContainer.Unity;
 
 namespace Code.GamePlay
 {
-    public class DogMoveSystem : ITickable
+    public class DogMoveSystem : ITickable, IFixedTickable
     {
         private readonly DogView dogView;
         private readonly IPlayerInput playerInput;
 
-
+        private bool jumping;
+        private float jumpingCup = 0.3f;
+        private float jumpingTimer = 0f;
+        private float jumpingCof = 1f;
         private int jumpCount;
         private const int JumpMax = 1;
+
+        private Vector3 force;
+        private float gravityScaler;
+        
 
         public DogMoveSystem(DogView dogView, IPlayerInput playerInput)
         {
             this.dogView = dogView;
             this.playerInput = playerInput;
+            
+            playerInput.Actions.Player.Jump.started += JumpOnstarted;
+            playerInput.Actions.Player.Jump.canceled += JumpOnstarted;
         }
 
         public void Tick()
@@ -26,31 +37,63 @@ namespace Code.GamePlay
             
             MoveDog(velocity);
             Jump(jump);
+            CalculateJumpHigh();
+        }
+
+        public void FixedTick()
+        {
+            dogView.rig.AddForce(Physics.gravity * (gravityScaler - 1) * dogView.rig.mass);
+        }
+
+        private void CalculateJumpHigh()
+        {
+            if (jumpingTimer > jumpingCup)
+            {
+                jumping = false;
+                jumpingTimer = 0;
+            }
+            if (jumping)
+            {
+                dogView.rig.velocity = new Vector2(dogView.rig.velocity.x, dogView.jumpHigh);
+                jumpingTimer += Time.deltaTime;
+            }
+        }
+
+        private void JumpOnstarted(InputAction.CallbackContext obj)
+        {
+            if (obj.started)
+            {
+                jumping = true;
+            }
+            else if (obj.canceled)
+            {
+                jumping = false;
+                jumpingTimer = 0;
+                jumpingCof = 1f;
+            }
         }
 
         private void Jump(bool jump)
         {
-            var gravity = dogView.gravityForce * dogView.gravityScaler * Time.deltaTime;
-            if (IsGrounded(dogView.groundChecker[0]) || IsGrounded(dogView.groundChecker[1]) && gravity < 0f)
+            // if (jump)
+            // {
+            //     var jumpForce = Mathf.Sqrt(dogView.jumpHigh * -2 * (Physics2D.gravity.y * gravityScaler - 1));
+            //     dogView.rig.AddForce(new Vector3(0, jumpForce * jumpingCof, 0), (ForceMode)ForceMode2D.Impulse);
+            // }
+
+            if (dogView.rig.velocity.y >= 0)
             {
-                jumpCount = 0;
-                gravity = 0;
-                var a = FindSurface();
-                if (a != Vector3.zero)
-                {
-                    var newPosition = new Vector3(dogView.transform.position.x, 
-                        a.y + dogView.dogHigh, dogView.transform.position.z);
-                    dogView.transform.position = newPosition;
-                }
+                gravityScaler = dogView.gravityScaler;
             }
+            else if(dogView.rig.velocity.y < 0)
+            {
+                gravityScaler = dogView.fallingGravityScaler;
+            }
+        }
+
+        private void JumpPushing()
+        {
             
-            if (jump)
-            {
-                if(jumpCount >= JumpMax) return;
-                jumpCount++;
-                gravity += dogView.jumpHigh;
-            }
-            dogView.transform.Translate(new Vector3(0, gravity, 0) * Time.deltaTime);
         }
 
 
@@ -64,13 +107,13 @@ namespace Code.GamePlay
             var newPosition = new Vector3(input.y, 0, input.x);
             dogView.transform.position += newPosition * dogView.dogSpeed * addSpeed * Time.deltaTime;
         }
-        
-        
+
+
         private bool IsGrounded(Transform checker)
         {
             return Physics.CheckSphere(checker.position, dogView.groundCheckerRadius, dogView.groundLayer);
         }
-        
+
         private Vector3 FindSurface()
         {
             var a = Array.Empty<Collider>();
