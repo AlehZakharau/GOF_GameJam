@@ -1,49 +1,42 @@
-﻿using CommonBaseUI.Data;
+﻿using System;
+using CommonBaseUI.Data;
 using UnityEngine;
+using VContainer;
 using VContainer.Unity;
 
 namespace Code.GamePlay
 {
-    public class PlatformController : ITickable, IStartable
+    public class PlatformController : MonoBehaviour
     {
-        private readonly IGameConfig gameConfig;
-        private float[] chordSteps;
+        public GameObject[] platforms;
 
-        private int stepIndex;
-        private float currentStep;
+        
+        private IAudioAnalyzer audioAnalyzer;
 
-        private int StepIndex
+        private int activationIndex;
+        private bool isActivation = true;
+
+        [Inject]
+        public void Construct(IAudioAnalyzer audioAnalyzer)
         {
-            get => stepIndex;
-            set => stepIndex = stepIndex >= chordSteps.Length - 1 ? 0 : value;
+            this.audioAnalyzer = audioAnalyzer;
+            audioAnalyzer.GetSignal += AudioAnalyzerOnGetSignal;
         }
 
-        public PlatformController(IGameConfig gameConfig)
+        private void AudioAnalyzerOnGetSignal()
         {
-            this.gameConfig = gameConfig;
+            platforms[activationIndex++].SetActive(isActivation);
 
-            chordSteps = new float[gameConfig.CommonData.chordSteps.Length + 1];
-            chordSteps[0] = gameConfig.CommonData.pauseNightDay;
-            for (int i = 0; i < gameConfig.CommonData.chordSteps.Length; i++)
+            if (activationIndex >= platforms.Length)
             {
-                chordSteps[i + 1] = gameConfig.CommonData.chordSteps[i];
-            }
-            currentStep = chordSteps[0];
-        }
-        public void Tick()
-        {
-            currentStep -= Time.deltaTime;
-            if (currentStep < 0)
-            {
-                StepIndex++;
-                currentStep = chordSteps[StepIndex];
-                //Debug.Log($"Step {StepIndex}");
+                isActivation = !isActivation;
+                activationIndex = 0;
             }
         }
 
-        public void Start()
+        private void OnDestroy()
         {
-            Debug.Log("Start");
+            audioAnalyzer.GetSignal -= AudioAnalyzerOnGetSignal;
         }
     }
 }

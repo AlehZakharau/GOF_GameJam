@@ -58,16 +58,13 @@ namespace Code
 
     public enum EAudioClips
     {
+        //Common
         MainTheme,
         Environment,
-        CatScare,
-        CatMeow,
-        CatPure,
         Jump,
         Button,
-        Splash,
-        Fireworks,
-        CatMeow2,
-        CatEating
+        
+        //Add Here
+        TestBit,
     }
 }

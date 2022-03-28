@@ -10,6 +10,8 @@ namespace Code
 {
     public class GameLifeTimeScope : LifetimeScope
     {
+        [Header("Mono")]
+        [SerializeField] private PlatformController[] platformControllers;
         [SerializeField] private DogView dogView;
         [Header("Data Base")]
         [SerializeField] private GameConfig gameConfig;
@@ -23,7 +25,7 @@ namespace Code
         protected override void Configure(IContainerBuilder builder)
         {
             builder.RegisterEntryPoint<DogMoveSystem>();
-            builder.RegisterEntryPoint<PlatformController>();
+            builder.RegisterEntryPoint<AudioAnalyzer>();
             builder.Register<IPlayerInput, PlayerInput>(Lifetime.Singleton);
             builder.Register<IMediator, MediatorUI>(Lifetime.Singleton);
 
@@ -76,6 +78,11 @@ namespace Code
         private void RegisterComponents(IContainerBuilder builder)
         {
             builder.RegisterComponent(dogView);
+
+            foreach (var platformController in platformControllers)
+            {
+                builder.RegisterComponent(platformController);
+            }
         }
     }
 }
