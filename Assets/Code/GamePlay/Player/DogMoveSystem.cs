@@ -11,12 +11,16 @@ namespace Code.GamePlay
 
         private bool jumping;
         private float jumpingTimer;
+        private bool inAir;
         
         private int jumpCount;
         private const int JumpMax = 1;
+        private float addSpeed = 1f;
         
         private float gravityScaler;
-        
+        private static readonly int Run = Animator.StringToHash("Run");
+        private static readonly int Jump1 = Animator.StringToHash("Jump");
+
 
         public DogMoveSystem(DogView dogView, IPlayerInput playerInput)
         {
@@ -33,6 +37,7 @@ namespace Code.GamePlay
             var jump = playerInput.Actions.Player.Jump.triggered;
             
             MoveDog(velocity);
+            CheckIsGrounded();
             Jump(jump);
             CalculateJumpHigh();
         }
@@ -51,6 +56,7 @@ namespace Code.GamePlay
             }
             if (jumping)
             {
+                
                 dogView.rig.velocity = new Vector2(dogView.rig.velocity.x, dogView.jumpHigh);
                 jumpingTimer += Time.deltaTime;
             }
@@ -58,9 +64,12 @@ namespace Code.GamePlay
 
         private void Jump(InputAction.CallbackContext obj)
         {
-            if (obj.started)
+            if (obj.started && jumpCount < JumpMax)
             {
+                jumpCount++;
+                inAir = true;
                 jumping = true;
+                dogView.Animator.SetBool(Jump1, true);
             }
             else if (obj.canceled)
             {
@@ -89,13 +98,29 @@ namespace Code.GamePlay
 
         private void MoveDog(Vector2 input)
         {
-            if(input == Vector2.zero) return;
-
-            var addSpeed = 1f;
+            if (input == Vector2.zero)
+            {
+                dogView.Animator.SetBool(Run, false);
+                return;
+            }
+            addSpeed = 1;
             if (!IsGrounded(dogView.groundChecker[1]))
-                addSpeed *= dogView.airSpeed; 
+                addSpeed *= dogView.airSpeed;
+            dogView.Animator.SetBool(Run, true);
+
+            dogView.SpriteRenderer.flipX =  input.x < 0;
             var newPosition = new Vector3(input.y, 0, input.x);
             dogView.transform.position += newPosition * dogView.dogSpeed * addSpeed * Time.deltaTime;
+        }
+
+        private void CheckIsGrounded()
+        {
+            if (IsGrounded(dogView.groundChecker[0]) && inAir && !jumping)
+            {
+                jumpCount = 0;
+                inAir = false;
+                dogView.Animator.SetBool(Jump1, false);
+            }
         }
 
 

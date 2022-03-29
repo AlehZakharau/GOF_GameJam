@@ -20,6 +20,8 @@ namespace Code.GamePlay
         [Header("Public Data")]
         public GameObject gameObject;
         public Transform transform;
+        public Animator Animator;
+        public SpriteRenderer SpriteRenderer;
         public Rigidbody rig;
     }
 
