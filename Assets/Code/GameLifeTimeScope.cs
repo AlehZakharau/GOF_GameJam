@@ -1,4 +1,5 @@
 ﻿using Code.GamePlay;
+using Code.GamePlay.Camera;
 using Code.GamePlay.Triggers;
 using Code.UI;
 using CommonBaseUI.Data;
@@ -13,6 +14,7 @@ namespace Code
     {
         [Header("Mono")]
         [SerializeField] private DogView dogView;
+        [SerializeField] private CameraView cameraView;
         [Header("Data Base")]
         [SerializeField] private GameConfig gameConfig;
         [Header("Audio")]
@@ -26,6 +28,7 @@ namespace Code
         {
             builder.RegisterEntryPoint<DogMoveSystem>();
             builder.RegisterEntryPoint<AudioAnalyzer>();
+            
             builder.Register<IPlayerInput, PlayerInput>(Lifetime.Singleton);
             builder.Register<IMediator, MediatorUI>(Lifetime.Singleton);
             builder.Register<ITriggersDetector, TriggersDetector>(Lifetime.Singleton);
@@ -80,7 +83,7 @@ namespace Code
         private void RegisterComponents(IContainerBuilder builder)
         {
             builder.RegisterComponent(dogView);
-            
+            builder.RegisterComponent(cameraView);
         }
     }
 }

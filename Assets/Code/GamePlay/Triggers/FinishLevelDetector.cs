@@ -5,6 +5,7 @@ namespace Code.GamePlay.Triggers.Code.GamePlay.Triggers
 {
     public class FinishLevelDetector : MonoBehaviour
     {
+        [SerializeField] private Transform finishPosition;
         private ITriggersDetector triggersDetector;
 
         private LayerMask layerMask;
@@ -24,7 +25,7 @@ namespace Code.GamePlay.Triggers.Code.GamePlay.Triggers
         {
             if (other.gameObject.layer == layerMask)
             {
-                triggersDetector.DetectTrigger(ETriggers.FinishLevel);
+                triggersDetector.DetectTriggerSetPosition(ETriggers.FinishLevel, finishPosition.position);
             }
         }
     }

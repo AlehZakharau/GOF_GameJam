@@ -3,6 +3,7 @@
     public enum ETriggers
     {
         Fall,
-        FinishLevel
+        FinishLevel,
+        CheckPoint
     }
 }

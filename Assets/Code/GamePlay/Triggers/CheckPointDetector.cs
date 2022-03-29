@@ -26,7 +26,7 @@ namespace Code.GamePlay.Triggers
         {
             if (other.gameObject.layer == layerMask)
             {
-                triggersDetector.SetCheckPoint(checkPointPosition.position);
+                triggersDetector.DetectTriggerSetPosition(ETriggers.CheckPoint, checkPointPosition.position);
             }
         }
     }

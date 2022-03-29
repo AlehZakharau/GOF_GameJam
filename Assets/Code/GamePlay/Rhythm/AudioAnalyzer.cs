@@ -47,6 +47,7 @@ namespace Code.GamePlay
         {
             audioSource.clip = audioDB.GetClip(EAudioClips.TestBit);
             audioSource.loop = true;
+            audioSource.pitch = 1.2f;
             samples = new float[QSamples];
             spectrum = new float[QSamples];
             fSample = AudioSettings.outputSampleRate;
