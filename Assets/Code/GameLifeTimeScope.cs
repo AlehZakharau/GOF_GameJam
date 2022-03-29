@@ -1,4 +1,5 @@
 ﻿using Code.GamePlay;
+using Code.GamePlay.Triggers;
 using Code.UI;
 using CommonBaseUI.Data;
 using UnityEngine;
@@ -11,7 +12,6 @@ namespace Code
     public class GameLifeTimeScope : LifetimeScope
     {
         [Header("Mono")]
-        [SerializeField] private PlatformController[] platformControllers;
         [SerializeField] private DogView dogView;
         [Header("Data Base")]
         [SerializeField] private GameConfig gameConfig;
@@ -28,6 +28,8 @@ namespace Code
             builder.RegisterEntryPoint<AudioAnalyzer>();
             builder.Register<IPlayerInput, PlayerInput>(Lifetime.Singleton);
             builder.Register<IMediator, MediatorUI>(Lifetime.Singleton);
+            builder.Register<ITriggersDetector, TriggersDetector>(Lifetime.Singleton);
+            builder.Register<IPlayerCheckPointSystem, PlayerCheckPointSystem>(Lifetime.Singleton);
 
             RegisterComponents(builder);
             RegisterDataBase(builder);
@@ -78,11 +80,7 @@ namespace Code
         private void RegisterComponents(IContainerBuilder builder)
         {
             builder.RegisterComponent(dogView);
-
-            foreach (var platformController in platformControllers)
-            {
-                builder.RegisterComponent(platformController);
-            }
+            
         }
     }
 }
