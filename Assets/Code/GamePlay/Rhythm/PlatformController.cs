@@ -23,6 +23,14 @@ namespace Code.GamePlay
             audioAnalyzer.GetSignal += AudioAnalyzerOnGetSignal;
         }
 
+        private void Start()
+        {
+            foreach (var platform in platforms)
+            {
+                platform.SetActive(false);
+            }
+        }
+
         private void AudioAnalyzerOnGetSignal()
         {
             platforms[activationIndex++].SetActive(isActivation);
