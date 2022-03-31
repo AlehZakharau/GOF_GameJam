@@ -8,6 +8,7 @@ namespace Code.GamePlay
     {
         private readonly DogView dogView;
         private readonly IPlayerInput playerInput;
+        private readonly IAudioCenter audioCenter;
 
         private bool jumping;
         private float jumpingTimer;
@@ -22,10 +23,11 @@ namespace Code.GamePlay
         private static readonly int Jump1 = Animator.StringToHash("Jump");
 
 
-        public DogMoveSystem(DogView dogView, IPlayerInput playerInput)
+        public DogMoveSystem(DogView dogView, IPlayerInput playerInput, IAudioCenter audioCenter)
         {
             this.dogView = dogView;
             this.playerInput = playerInput;
+            this.audioCenter = audioCenter;
             
             playerInput.Actions.Player.Jump.started += Jump;
             playerInput.Actions.Player.Jump.canceled += Jump;
@@ -70,6 +72,8 @@ namespace Code.GamePlay
                 inAir = true;
                 jumping = true;
                 dogView.Animator.SetBool(Jump1, true);
+                var random = Random.Range(0, 5);
+                if(random == 0) audioCenter.PlaySound(EAudioClips.Jump);
             }
             else if (obj.canceled)
             {
@@ -120,6 +124,8 @@ namespace Code.GamePlay
                 jumpCount = 0;
                 inAir = false;
                 dogView.Animator.SetBool(Jump1, false);
+                var random = Random.Range(0, 5);
+                if(random == 0) audioCenter.PlaySound(EAudioClips.Ouu);
             }
         }
 

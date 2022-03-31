@@ -7,13 +7,16 @@ namespace Code.GamePlay.Triggers.Code.GamePlay.Triggers
     {
         [SerializeField] private Transform finishPosition;
         private ITriggersDetector triggersDetector;
+        private IAudioCenter audioCenter;
 
         private LayerMask layerMask;
+        private bool isPlayed;
 
         [Inject]
-        public void Construct(ITriggersDetector triggersDetector)
+        public void Construct(ITriggersDetector triggersDetector, IAudioCenter audioCenter)
         {
             this.triggersDetector = triggersDetector;
+            this.audioCenter = audioCenter;
         }
 
         private void Start()
@@ -26,6 +29,11 @@ namespace Code.GamePlay.Triggers.Code.GamePlay.Triggers
             if (other.gameObject.layer == layerMask)
             {
                 triggersDetector.DetectTriggerSetPosition(ETriggers.FinishLevel, finishPosition.position);
+                if (!isPlayed)
+                {
+                    audioCenter.PlaySound(EAudioClips.CheckPoint);
+                    isPlayed = true;
+                }
             }
         }
     }

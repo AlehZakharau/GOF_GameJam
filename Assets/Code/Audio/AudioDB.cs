@@ -61,6 +61,8 @@ namespace Code
         //Common
         MainTheme,
         Environment,
+        Ouu,
+        CheckPoint,
         Jump,
         Button,
         

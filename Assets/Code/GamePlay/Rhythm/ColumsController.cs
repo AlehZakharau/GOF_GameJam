@@ -54,7 +54,6 @@ namespace Code.GamePlay
             {
                 StartCoroutine(MoveBack(columns[index].transform, startPosition,
                     speedBack, index));
-                yield break;
             }
             
             //float timeScale = 1 / (Vector3.Distance(startPosition, endPosition) / speed);
