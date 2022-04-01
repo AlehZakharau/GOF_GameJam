@@ -9,6 +9,7 @@ namespace Code
     public interface IAudioCenter
     {
         public void PlaySound(EAudioClips clipName);
+        public void PlaySound(EAudioClips clipName, SourceConfig config);
     }
     public class AudioCenter : IAudioCenter
     {
@@ -52,7 +53,7 @@ namespace Code
         {
             source.loop = config.Loop;
             source.pitch += Random.Range(-config.PitchRange, config.PitchRange);
-            source.outputAudioMixerGroup = GetMixerGroup(config.MixerGroup);
+            //source.outputAudioMixerGroup = GetMixerGroup(config.MixerGroup);
         }
 
         private AudioSource FindAudioPlayer()
@@ -86,7 +87,7 @@ namespace Code
 
     public enum EAudioMixerGroupNames
     {
-        Master,
+        
         Music,
         Sound
     }

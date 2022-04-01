@@ -9,7 +9,7 @@ namespace Code
         public EAudioMixerGroupNames MixerGroup;
 
         public SourceConfig(bool loop = false, float pitchRange = 0, 
-            EAudioMixerGroupNames audioMixerGroup = EAudioMixerGroupNames.Master )
+            EAudioMixerGroupNames audioMixerGroup = EAudioMixerGroupNames.Sound )
         {
             Loop = loop;
             PitchRange = pitchRange;

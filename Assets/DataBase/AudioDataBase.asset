@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: AudioDataBase
   m_EditorClassIdentifier: 
   audioBases:
-  - name: 6
+  - name: 7
     clip: {fileID: 8300000, guid: 7b7074d41e80f75458c975463cf43cd2, type: 3}
   - name: 4
     clip: {fileID: 8300000, guid: 16973ab337a80e146bb83b2132079d7c, type: 3}
@@ -21,4 +21,6 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: 9592db403f830824d92a48499e6b1a33, type: 3}
   - name: 3
     clip: {fileID: 8300000, guid: 7eececfb05c3e7b48aa4225899277ae1, type: 3}
+  - name: 6
+    clip: {fileID: 8300000, guid: 783cc598efc6ac040a48e2a59713f6fe, type: 3}
   audioPlaylists: []

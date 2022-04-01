@@ -177,7 +177,7 @@ namespace Code
             ""id"": ""724b9f69-e9d5-4eaf-bff2-31e50f962553"",
             ""actions"": [
                 {
-                    ""name"": ""New action"",
+                    ""name"": ""Any"",
                     ""type"": ""Button"",
                     ""id"": ""0b0cb1d1-f2d0-4cc0-a5c2-c1b95cc8b1d9"",
                     ""expectedControlType"": ""Button"",
@@ -190,11 +190,44 @@ namespace Code
                 {
                     ""name"": """",
                     ""id"": ""1d34258e-535d-42ed-861f-2aa7d8b09481"",
-                    ""path"": """",
+                    ""path"": ""<Keyboard>/anyKey"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""New action"",
+                    ""action"": ""Any"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3376376d-3934-4fcd-a94d-f84667da221a"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Any"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""026c8bf3-e3b8-4156-ad37-c6b8ca39968b"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Any"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""976661dd-8ea5-4bed-9085-54fa7b1eac8f"",
+                    ""path"": ""<Touchscreen>/Press"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Any"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -209,7 +242,7 @@ namespace Code
             m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
             // Menu
             m_Menu = asset.FindActionMap("Menu", throwIfNotFound: true);
-            m_Menu_Newaction = m_Menu.FindAction("New action", throwIfNotFound: true);
+            m_Menu_Any = m_Menu.FindAction("Any", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -310,12 +343,12 @@ namespace Code
         // Menu
         private readonly InputActionMap m_Menu;
         private IMenuActions m_MenuActionsCallbackInterface;
-        private readonly InputAction m_Menu_Newaction;
+        private readonly InputAction m_Menu_Any;
         public struct MenuActions
         {
             private @Actions m_Wrapper;
             public MenuActions(@Actions wrapper) { m_Wrapper = wrapper; }
-            public InputAction @Newaction => m_Wrapper.m_Menu_Newaction;
+            public InputAction @Any => m_Wrapper.m_Menu_Any;
             public InputActionMap Get() { return m_Wrapper.m_Menu; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -325,16 +358,16 @@ namespace Code
             {
                 if (m_Wrapper.m_MenuActionsCallbackInterface != null)
                 {
-                    @Newaction.started -= m_Wrapper.m_MenuActionsCallbackInterface.OnNewaction;
-                    @Newaction.performed -= m_Wrapper.m_MenuActionsCallbackInterface.OnNewaction;
-                    @Newaction.canceled -= m_Wrapper.m_MenuActionsCallbackInterface.OnNewaction;
+                    @Any.started -= m_Wrapper.m_MenuActionsCallbackInterface.OnAny;
+                    @Any.performed -= m_Wrapper.m_MenuActionsCallbackInterface.OnAny;
+                    @Any.canceled -= m_Wrapper.m_MenuActionsCallbackInterface.OnAny;
                 }
                 m_Wrapper.m_MenuActionsCallbackInterface = instance;
                 if (instance != null)
                 {
-                    @Newaction.started += instance.OnNewaction;
-                    @Newaction.performed += instance.OnNewaction;
-                    @Newaction.canceled += instance.OnNewaction;
+                    @Any.started += instance.OnAny;
+                    @Any.performed += instance.OnAny;
+                    @Any.canceled += instance.OnAny;
                 }
             }
         }
@@ -346,7 +379,7 @@ namespace Code
         }
         public interface IMenuActions
         {
-            void OnNewaction(InputAction.CallbackContext context);
+            void OnAny(InputAction.CallbackContext context);
         }
     }
 }

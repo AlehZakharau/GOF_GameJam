@@ -91,7 +91,6 @@ namespace Code.GamePlay
             if (pitchValue > 0 && !detected)
             {
                 detected = true;
-                Debug.Log($"Pitch {pitchCounter}");
                 pitchCounter++;
                 GetSignal?.Invoke();
             }

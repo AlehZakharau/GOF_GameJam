@@ -65,6 +65,7 @@ namespace Code
         CheckPoint,
         Jump,
         Button,
+        Fireworks,
         
         //Add Here
         TestBit,
