@@ -12,6 +12,7 @@ namespace Code.GamePlay
         public Transform[] groundChecker;
         public float groundCheckerRadius = 0.1f;
         public LayerMask groundLayer;
+        public LayerMask movPlatformLayer;
         [Header("Jump param")]
         public float gravityScaler = 2f;
         public float fallingGravityScaler = 6f;

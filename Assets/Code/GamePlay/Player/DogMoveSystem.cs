@@ -17,8 +17,10 @@ namespace Code.GamePlay
         private int jumpCount;
         private const int JumpMax = 1;
         private float addSpeed = 1f;
-        
+
         private float gravityScaler;
+
+        private Vector3 platformMove;
         private static readonly int Run = Animator.StringToHash("Run");
         private static readonly int Jump1 = Animator.StringToHash("Jump");
 
@@ -47,6 +49,8 @@ namespace Code.GamePlay
         public void FixedTick()
         {
             dogView.rig.AddForce(Physics.gravity * (gravityScaler - 1) * dogView.rig.mass);
+
+            dogView.rig.velocity += platformMove;
         }
 
         private void CalculateJumpHigh()
@@ -127,6 +131,20 @@ namespace Code.GamePlay
                 var random = Random.Range(0, 5);
                 if(random == 0) audioCenter.PlaySound(EAudioClips.Ouu);
             }
+            //platformMove = IsOnPlatform(dogView.groundChecker[0]);
+        }
+
+        private Vector3 IsOnPlatform(Transform checker)
+        {
+            var colliders =
+                Physics.OverlapSphere(checker.position, dogView.groundCheckerRadius, dogView.movPlatformLayer);
+            foreach (var collider in colliders)
+            {
+                collider.gameObject.TryGetComponent(out Rigidbody rig);
+                Debug.Log($"Moving {rig.velocity}");
+                return rig.velocity;
+            }
+            return Vector3.zero;
         }
 
 
